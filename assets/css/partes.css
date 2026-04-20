@@ -1,0 +1,245 @@
+/* ══════════════════════════════════════
+   partes.css  –  LVL Consulting Dashboard
+   Estilos que complementan Tailwind CSS
+══════════════════════════════════════ */
+
+:root {
+    --brand: #092083;
+    --brand-dark: #E6EFFB;
+    --brand-light: #E6EFFB;
+    --brand2: #0ea5e9;
+    --sidebar-w: 240px;
+    --sidebar-collapsed: 64px;
+    --radius-card: .75rem;
+    --shadow-card: 0 1px 6px rgba(0, 0, 0, .06);
+}
+
+/* ── Reset & base ─────────────────── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #f4f6fb;
+    color: #1e293b;
+}
+
+/* ── Sidebar ──────────────────────── */
+#sidebar {
+    width: var(--sidebar-w);
+    transition: width .25s cubic-bezier(.4, 0, .2, 1);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+#sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+}
+
+/* hide text when collapsed */
+#sidebar.collapsed .nav-label,
+#sidebar.collapsed .logo-text,
+#sidebar.collapsed .nav-arrow {
+    display: none !important;
+}
+
+#sidebar.collapsed .logo-icon {
+    margin: 0 auto;
+}
+
+/* ── Nav items ───────────────────── */
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .55rem .9rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s ease, color .15s ease;
+    position: relative;
+    user-select: none;
+}
+
+.nav-item:hover {
+    background: var(--brand-light);
+    color: var(--brand);
+}
+
+.nav-item.active {
+    background: var(--brand-light);
+    color: var(--brand);
+    font-weight: 600;
+}
+
+.nav-item .nav-icon {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    min-width: 24px;
+    text-align: center;
+}
+
+/* ── Submenu (inline) ─────────────── */
+.submenu {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height .3s ease;
+}
+
+.submenu.open {
+    max-height: 300px;
+}
+
+/* ── Floating submenu (collapsed) ─── */
+.floating-sub {
+    display: none;
+    position: absolute;
+    left: calc(var(--sidebar-collapsed) + 6px);
+    top: 0;
+    background: #ffffff;
+    border-radius: .6rem;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, .13);
+    min-width: 190px;
+    z-index: 200;
+    padding: .45rem 0;
+    pointer-events: auto;
+}
+
+#sidebar.collapsed .nav-item:hover .floating-sub {
+    display: block;
+}
+
+.floating-sub a {
+    display: block;
+    padding: .5rem 1.1rem;
+    font-size: .82rem;
+    color: #374151;
+    white-space: nowrap;
+    transition: background .12s, color .12s;
+    text-decoration: none;
+}
+
+.floating-sub a:hover {
+    background: var(--brand-light);
+    color: var(--brand);
+}
+
+/* ── KPI cards ───────────────────── */
+.kpi-card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    padding: 1.1rem 1.3rem;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow .2s;
+}
+
+.kpi-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .09);
+}
+
+.kpi-badge-up {
+    background: #dcfce7;
+    color: #15803d;
+    font-size: .68rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    padding: .18rem .6rem;
+    display: inline-block;
+}
+
+.kpi-badge-down {
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: .68rem;
+    font-weight: 700;
+    border-radius: 9999px;
+    padding: .18rem .6rem;
+    display: inline-block;
+}
+
+/* ── Chart cards ─────────────────── */
+.chart-card {
+    background: #ffffff;
+    border-radius: var(--radius-card);
+    padding: 1.2rem 1.4rem;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow .2s;
+}
+
+.chart-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .09);
+}
+
+/* ── Progress bars ────────────────── */
+.prog-bar {
+    height: 6px;
+    border-radius: 9999px;
+    background: #e5e7eb;
+    overflow: hidden;
+}
+
+.prog-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width .6s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ── Toggle button ───────────────── */
+#toggle-btn {
+    transition: background .15s, color .15s;
+}
+
+/* ── Scrollbar ───────────────────── */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ── Skeleton loading ─────────────── */
+@keyframes skeleton-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .4;
+    }
+}
+
+.skeleton {
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+    background: #e5e7eb;
+    border-radius: .4rem;
+}
+
+/* ── Responsive tweaks ────────────── */
+@media (max-width: 768px) {
+    #sidebar {
+        width: var(--sidebar-collapsed);
+    }
+
+    #sidebar .nav-label,
+    #sidebar .logo-text,
+    #sidebar .nav-arrow {
+        display: none !important;
+    }
+}

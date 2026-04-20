@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LVL Consulting – Dashboard</title>
+
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <!-- partes.css -->
+    <link rel="stylesheet" href="../css/partes.css" />
+
+    <style>
+        :root {
+            --brand: #092083;
+            --brand2: #E6EFFB;
+            --sidebar-w: 240px;
+            --sidebar-collapsed: 64px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #FFFFFF;
+        }
+
+        #sidebar {
+            width: var(--sidebar-w);
+            transition: width .25s ease;
+            overflow: hidden;
+        }
+
+        #sidebar.collapsed {
+            width: var(--sidebar-collapsed);
+        }
+
+        #sidebar.collapsed .nav-label,
+        #sidebar.collapsed .logo-text,
+        #sidebar.collapsed .nav-arrow {
+            display: none !important;
+        }
+
+        #sidebar.collapsed .logo-icon {
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .55rem .9rem;
+            border-radius: .5rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .15s, color .15s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: #E6EFFB;
+            color: var(--brand);
+        }
+
+        .nav-item.active {
+            background: #E6EFFB;
+            color: var(--brand);
+            font-weight: 600;
+        }
+
+        .nav-item .nav-icon {
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .submenu {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .25s ease;
+        }
+
+        .submenu.open {
+            max-height: 300px;
+        }
+
+        .floating-sub {
+            display: none;
+            position: absolute;
+            left: calc(var(--sidebar-collapsed) + 4px);
+            top: 0;
+            background: #fff;
+            border-radius: .5rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+            min-width: 180px;
+            z-index: 100;
+            padding: .4rem 0;
+        }
+
+        #sidebar.collapsed .nav-item:hover .floating-sub {
+            display: block;
+        }
+
+        .floating-sub a {
+            display: block;
+            padding: .45rem 1rem;
+            font-size: .82rem;
+            color: #374151;
+            white-space: nowrap;
+        }
+
+        .floating-sub a:hover {
+            background: #f0fdf9;
+            color: var(--brand);
+        }
+
+        .kpi-card {
+            background: #fff;
+            border-radius: .75rem;
+            padding: 1.1rem 1.3rem;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, .06);
+        }
+
+        .kpi-badge-up {
+            background: #dcfce7;
+            color: #15803d;
+            font-size: .7rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            padding: .15rem .55rem;
+        }
+
+        .kpi-badge-down {
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: .7rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            padding: .15rem .55rem;
+        }
+
+        .chart-card {
+            background: #fff;
+            border-radius: .75rem;
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, .06);
+        }
+
+        #toggle-btn {
+            transition: transform .2s;
+        }
+
+        .prog-bar {
+            height: 6px;
+            border-radius: 9999px;
+            background: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .prog-fill {
+            height: 100%;
+            border-radius: 9999px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .4
+            }
+        }
+
+        .skeleton {
+            animation: pulse 1.5s infinite;
+            background: #e5e7eb;
+            border-radius: .4rem;
+        }
+    </style>
+
+</head>
+
+<body class="flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="bg-gray-50 flex flex-col border-r border-gray-100 h-full flex-shrink-0">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-2 px-4 py-5 border-b border-gray-100">
+            <div class="logo-icon flex-shrink-0">
+                <!-- LVL icon box -->
+                <div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:var(--brand)">
+                    <img class="object-contain" src="../img/logo.png"></img>
+                </div>
+            </div>
+            <span class="logo-text font-bold text-sm text-blue-800 leading-tight">LVL<br><span
+                    class="font-bold text-blue-800 text-xs">CONSULTING</span></span>
+        </div>
+
+        <!-- Toggle btn -->
+        <div class="px-3 pt-3 pb-1">
+            <button id="toggle-btn" onclick="toggleSidebar()"
+                class="w-full flex items-center justify-center h-8 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
+                <i id="toggle-icon" class="ri-menu-line text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 overflow-y-auto px-2 mt-1 space-y-0.5">
+            <p class="nav-label text-[12px] font-semibold text-gray-400 tracking-widest px-2 py-2">Menú</p>
+
+            <!-- Dashboard (active) -->
+            <div class="nav-item active">
+                <i class="nav-icon ri-dashboard-3-line pr-1"></i>
+                <span class="nav-label text-sm">Dashboard</span>
+            </div>
+
+            <!-- Productos -->
+            <div class="nav-item">
+                <i class="nav-icon ri-shopping-bag-3-line pr-1"></i>
+                <span class="nav-label text-sm">Productos</span>
+                <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
+            </div>
+
+            <!-- Apps -->
+            <div class="nav-item">
+                <i class="nav-icon ri-apps-2-line pr-1"></i>
+                <span class="nav-label text-sm">Apps</span>
+                <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
+            </div>
+
+            <!-- Páginas webs (has submenu) -->
+            <div>
+                <div class="nav-item" onclick="toggleSubmenu(this)" id="nav-paginas">
+                    <i class="nav-icon ri-global-line pr-1"></i>
+                    <span class="nav-label text-sm">Páginas webs</span>
+                    <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base transition-transform"
+                        id="arrow-paginas"></i>
+
+                    <!-- Floating sub (collapsed mode) -->
+                    <div class="floating-sub">
+                        <a href="#">Administrador</a>
+                        <a href="#">Recursos humanos</a>
+                        <a href="#">Estudios contables</a>
+                        <a href="#">Logística</a>
+                    </div>
+                </div>
+                <!-- Inline submenu (expanded mode) -->
+                <div class="submenu" id="sub-paginas">
+                    <div class="pl-9 pr-2 space-y-0.5 pb-1">
+                        <a href="#"
+                            class="block text-sm text-gray-500 hover:text-blue-600 px-2 py-1.5 rounded-lg hover:bg-blue-50">Administrador</a>
+                        <a href="#"
+                            class="block text-sm text-gray-500 hover:text-blue-600 px-2 py-1.5 rounded-lg hover:bg-blue-50">Recursos
+                            humanos</a>
+                        <a href="#"
+                            class="block text-sm text-gray-500 hover:text-blue-600 px-2 py-1.5 rounded-lg hover:bg-blue-50">Estudios
+                            contables</a>
+                        <a href="#"
+                            class="block text-sm text-gray-500 hover:text-blue-600 px-2 py-1.5 rounded-lg hover:bg-blue-50">Logística</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Servidores -->
+            <div class="nav-item">
+                <i class="nav-icon ri-server-2-line pr-1"></i>
+                <span class="nav-label text-sm">Servidores</span>
+                <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
+            </div>
+
+            <!-- Tienda -->
+            <div class="nav-item">
+                <i class="nav-icon ri-store-3-line pr-1"></i>
+                <span class="nav-label text-sm">Tienda</span>
+                <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
+            </div>
+
+            <!-- Centro de ayuda -->
+            <div class="nav-item">
+                <i class="nav-icon ri-customer-service-2-line pr-1"></i>
+                <span class="nav-label text-sm">Centro de ayuda</span>
+                <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+        <!-- ── Topbar ── -->
+        <header class="bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between flex-shrink-0">
+            <!-- Greeting -->
+            <div>
+                <h1 class="text-base font-bold text-gray-800">¡Te damos la bienvenida Miguel!</h1>
+                <p id="today-date" class="text-xs text-gray-400 mt-0.5"></p>
+            </div>
+            <!-- Right side -->
+            <div class="flex items-center gap-4">
+                <!-- Language -->
+                <div class="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
+                    <span>🇪🇸</span>
+                    <span class="font-medium">Español</span>
+                    <i class="ri-arrow-down-s-line text-gray-400"></i>
+                </div>
+                <!-- Grid icon -->
+                <button class="text-gray-400 hover:text-gray-700"><i class="ri-layout-grid-line text-lg"></i></button>
+                <!-- Bell -->
+                <button class="relative text-gray-400 hover:text-gray-700">
+                    <i class="ri-notification-3-line text-lg"></i>
+                    <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-500"></span>
+                </button>
+                <!-- Settings -->
+                <button class="text-gray-400 hover:text-gray-700"><i class="ri-settings-3-line text-lg"></i></button>
+                <!-- User -->
+                <div class="flex items-center gap-2 cursor-pointer">
+                    <img src="https://i.pravatar.cc/36?img=52" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
+                    <div class="leading-tight">
+                        <p class="text-xs font-semibold text-gray-800">Miguel Liberato</p>
+                        <p class="text-[10px] text-gray-400">CEO LVL Consulting</p>
+                    </div>
+                    <i class="ri-arrow-down-s-line text-gray-400 text-sm"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── Content ── -->
+        <main class="flex-1 overflow-y-auto p-6 space-y-5">
+
+            <h2 class="text-base font-bold text-blue-800">Dashboard</h2>
+
+            <!-- ── KPI Cards ── -->
+            <div class="grid grid-cols-2 xl:grid-cols-4 gap-4" id="kpi-grid">
+                <!-- skeletons while loading -->
+                <div class="kpi-card">
+                    <div class="skeleton h-4 w-24 mb-3"></div>
+                    <div class="skeleton h-7 w-28 mb-2"></div>
+                    <div class="skeleton h-3 w-32"></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="skeleton h-4 w-24 mb-3"></div>
+                    <div class="skeleton h-7 w-28 mb-2"></div>
+                    <div class="skeleton h-3 w-32"></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="skeleton h-4 w-24 mb-3"></div>
+                    <div class="skeleton h-7 w-28 mb-2"></div>
+                    <div class="skeleton h-3 w-32"></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="skeleton h-4 w-24 mb-3"></div>
+                    <div class="skeleton h-7 w-28 mb-2"></div>
+                    <div class="skeleton h-3 w-32"></div>
+                </div>
+            </div>
+
+            <!-- ── Sales History Line Chart ── -->
+            <div class="chart-card">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-semibold text-blue-700">Historial de ventas</h3>
+                    <div class="flex items-center gap-4 text-xs text-gray-400">
+                        <span class="flex items-center gap-1"><span class="inline-block w-3 h-0.5 rounded"
+                                style="background:var(--brand)"></span>Total libre (GB)</span>
+                        <span class="flex items-center gap-1"><span
+                                class="inline-block w-3 h-0.5 rounded bg-sky-400"></span>% Libre (GB)</span>
+                    </div>
+                </div>
+                <div class="relative" style="height:180px">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ── Bottom row ── -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+                <!-- Donut + periods -->
+                <div class="chart-card">
+                    <h3 class="text-sm font-semibold text-blue-700 mb-4">Historial de ventas</h3>
+                    <div class="flex items-center gap-6">
+                        <div class="relative flex-shrink-0" style="width:110px;height:110px">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+                        <div id="period-stats" class="grid grid-cols-2 gap-x-6 gap-y-3 w-full">
+                            <!-- filled by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referred bars -->
+                <div class="chart-card">
+                    <h3 class="text-sm font-semibold text-blue-700 mb-4">Historial de ventas</h3>
+                    <div id="referred-list" class="space-y-4">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // ── Date ──────────────────────────────────────────────
+        const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        const now = new Date();
+        document.getElementById('today-date').textContent =
+            `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]}, ${now.getFullYear()}`;
+
+        // ── Sidebar toggle ─────────────────────────────────────
+        let collapsed = false;
+        function toggleSidebar() {
+            collapsed = !collapsed;
+            const sb = document.getElementById('sidebar');
+            const icon = document.getElementById('toggle-icon');
+            sb.classList.toggle('collapsed', collapsed);
+            icon.className = collapsed ? 'ri-arrow-right-s-line text-lg' : 'ri-menu-line text-lg';
+
+            // close inline submenu when collapsing
+            if (collapsed) {
+                document.getElementById('sub-paginas').classList.remove('open');
+                document.getElementById('arrow-paginas').style.transform = '';
+            }
+        }
+
+        // ── Submenu toggle ─────────────────────────────────────
+        function toggleSubmenu(el) {
+            if (collapsed) return; // floating handles it
+            const sub = document.getElementById('sub-paginas');
+            const arrow = document.getElementById('arrow-paginas');
+            const isOpen = sub.classList.contains('open');
+            sub.classList.toggle('open', !isOpen);
+            arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
+        }
+
+        // ── DummyJSON fetch helpers ────────────────────────────
+        async function fetchProducts() {
+            const r = await fetch('https://dummyjson.com/products?limit=100&select=price,stock,discountPercentage,title');
+            return (await r.json()).products;
+        }
+        async function fetchUsers() {
+            const r = await fetch('https://dummyjson.com/users?limit=100&select=id');
+            return (await r.json()).users;
+        }
+        async function fetchCarts() {
+            const r = await fetch('https://dummyjson.com/carts?limit=30');
+            return (await r.json()).carts;
+        }
+
+        // ── Build KPI cards ────────────────────────────────────
+        function buildKPI(products, users) {
+            const totalRevenue = products.reduce((s, p) => s + p.price * p.stock, 0);
+            const totalInversion = products.reduce((s, p) => s + p.price * (p.stock * .6), 0);
+            const ganancia = totalRevenue * 0.08;
+            const numClientes = users.length;
+
+            const kpis = [
+                { label: 'Ingresos', value: `S/ ${(totalRevenue / 1000).toFixed(2)}k`, badge: '+S/50k', up: true, note: 'Desde el mes pasado' },
+                { label: 'Número de clientes', value: numClientes, badge: '-30 clientes', up: false, note: 'Desde el mes pasado' },
+                { label: 'Inversión realizada', value: `S/ ${(totalInversion / 1000).toFixed(2)}k`, badge: '+S/32k', up: true, note: 'Desde el mes pasado' },
+                { label: 'Relación de ganancia', value: `S/ ${(ganancia / 1000).toFixed(2)}k`, badge: '-S/50k', up: false, note: 'Desde el mes pasado' },
+            ];
+
+            document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
+    <div class="kpi-card">
+      <p class="text-xs text-gray-400 font-medium mb-1">${k.label}</p>
+      <p class="text-2xl font-bold text-gray-800 mb-2">${k.value}</p>
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="${k.up ? 'kpi-badge-up' : 'kpi-badge-down'}">${k.badge}</span>
+        <span class="text-xs text-gray-400">${k.note}</span>
+      </div>
+    </div>
+  `).join('');
+        }
+
+        // ── Line Chart ─────────────────────────────────────────
+        function buildLineChart(carts) {
+            const days7 = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+            // aggregate cart totals by day (round-robin)
+            const totals = Array(7).fill(0);
+            const counts = Array(7).fill(0);
+            carts.forEach((c, i) => { totals[i % 7] += c.total; counts[i % 7]++; });
+            const data1 = totals.map((t, i) => counts[i] ? +(t / counts[i] / 10).toFixed(1) : 0);
+            const data2 = data1.map(v => +(v * 0.13).toFixed(1));
+
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days7,
+                    datasets: [
+                        {
+                            label: 'Total libre (GB)', data: data1, borderColor: '#00c896', backgroundColor: 'rgba(0,200,150,.08)',
+                            tension: .45, fill: true, pointRadius: 3, pointBackgroundColor: '#00c896', borderWidth: 2
+                        },
+                        {
+                            label: '% Libre (GB)', data: data2, borderColor: '#38bdf8', backgroundColor: 'transparent',
+                            tension: .45, fill: false, pointRadius: 3, pointBackgroundColor: '#38bdf8', borderWidth: 2
+                        },
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.raw}` } } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#9ca3af' } },
+                        y: { position: 'left', grid: { color: '#f3f4f6' }, ticks: { font: { size: 11 }, color: '#9ca3af' } },
+                        y1: {
+                            position: 'right', grid: { display: false }, ticks: { font: { size: 11 }, color: '#38bdf8' },
+                            min: 0, max: 20,
+                            afterDataLimits(scale) { scale.max = 20; }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ── Donut Chart + periods ──────────────────────────────
+        function buildDonut(products) {
+            const total = products.reduce((s, p) => s + p.price * p.stock, 0);
+            const segments = [
+                { label: 'Anual', pct: 1.00, color: '#00c896' },
+                { label: 'Mensual', pct: 0.60, color: '#0ea5e9' },
+                { label: 'Semanal', pct: 0.20, color: '#6366f1' },
+                { label: 'Diario', pct: 0.30, color: '#1e293b' },
+            ];
+
+            const ctx = document.getElementById('donutChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: segments.map(s => s.label),
+                    datasets: [{
+                        data: segments.map(s => s.pct * 100),
+                        backgroundColor: segments.map(s => s.color),
+                        borderWidth: 2, borderColor: '#fff', hoverOffset: 4
+                    }]
+                },
+                options: {
+                    cutout: '72%',
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.label}: ${c.raw}%` } } }
+                }
+            });
+
+            document.getElementById('period-stats').innerHTML = segments.map(s => `
+    <div>
+      <div class="flex items-center gap-1.5 mb-0.5">
+        <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:${s.color}"></span>
+        <span class="text-xs text-gray-500">${s.label}</span>
+      </div>
+      <p class="text-lg font-bold text-gray-800">${Math.round(s.pct * 100)}%</p>
+      <p class="text-xs text-gray-400">S/${(total * s.pct / 1000).toFixed(0)}k</p>
+    </div>
+  `).join('');
+        }
+
+        // ── Referred bars ──────────────────────────────────────
+        function buildReferred(carts) {
+            // take top 4 carts as "referidos"
+            const top = carts.slice(0, 4).map((c, i) => ({
+                id: 1024 + i,
+                label: 'Referidos',
+                pct: Math.round(70 + Math.random() * 25),
+                color: i % 2 === 0 ? '#00c896' : '#0ea5e9'
+            }));
+            document.getElementById('referred-list').innerHTML = top.map(r => `
+    <div>
+      <div class="flex items-center justify-between mb-1">
+        <div>
+          <p class="text-sm font-semibold text-gray-800">${r.id}</p>
+          <p class="text-xs text-gray-400">${r.label}</p>
+        </div>
+        <span class="text-xs text-gray-500 font-medium">${r.pct}%</span>
+      </div>
+      <div class="prog-bar">
+        <div class="prog-fill" style="width:${r.pct}%;background:${r.color}"></div>
+      </div>
+    </div>
+  `).join('');
+        }
+
+        // ── Bootstrap ──────────────────────────────────────────
+        (async () => {
+            try {
+                const [products, users, cartsData] = await Promise.all([
+                    fetchProducts(), fetchUsers(), fetchCarts()
+                ]);
+                const carts = cartsData;
+                buildKPI(products, users);
+                buildLineChart(carts);
+                buildDonut(products);
+                buildReferred(carts);
+            } catch (e) {
+                console.error('Data fetch error:', e);
+                // Fallback dummy data
+                buildKPI(
+                    Array.from({ length: 30 }, (_, i) => ({ price: 15 + i * 3, stock: 10 + i, discountPercentage: 5 })),
+                    Array.from({ length: 4789 }, (_, i) => ({ id: i }))
+                );
+            }
+        })();
+    </script>
+</body>
+
+</html>
