@@ -4,34 +4,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LVL Consulting – Dashboard</title>
-
-    <!-- TailwindCSS -->
-    <script src="../css/libs/tailwindcss.js"></script>
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
-    <!-- Google Fonts -->
+    <title>LVL Consulting – Páginas Webs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
-
-    <!-- Remix Icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
-
-    <!-- LVL - partes.css -->
-    <link rel="stylesheet" href="../css/partes.css" />
-
+    <link rel="stylesheet" href="../css/partes.css">
 </head>
 
 <body class="flex h-screen overflow-hidden">
 
     <aside id="sidebar" class="bg-gray-50 flex flex-col border-r border-gray-100 h-full flex-shrink-0">
 
-        <!-- Logo -->
         <div class="flex items-center gap-2 px-4 py-5 border-b border-gray-100">
             <div class="logo-icon flex-shrink-0">
-                <!-- LVL icon box -->
                 <div class="w-8 h-8 rounded-md flex items-center justify-center" style="background:var(--brand)">
                     <img class="object-contain" src="../img/logo.png"></img>
                 </div>
@@ -40,7 +26,6 @@
                     class="font-bold text-blue-800 text-xs">CONSULTING</span></span>
         </div>
 
-        <!-- Toggle btn -->
         <div class="px-3 pt-3 pb-1">
             <button id="toggle-btn" onclick="toggleSidebar()"
                 class="w-full flex items-center justify-center h-8 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition">
@@ -48,39 +33,30 @@
             </button>
         </div>
 
-        <!-- Nav -->
         <nav class="flex-1 overflow-y-auto px-2 mt-1 space-y-0.5">
             <p class="nav-label text-[12px] font-semibold text-gray-400 tracking-widest px-2 py-2">Menú</p>
 
-            <!-- Dashboard (active) -->
-            <div class="nav-item active">
+            <a href="../partes/dashboard.html" class="nav-item">
                 <i class="nav-icon ri-dashboard-line pr-1"></i>
                 <span class="nav-label text-sm">Dashboard</span>
-            </div>
-
-            <!-- Productos -->
+            </a>
             <div class="nav-item">
                 <i class="nav-icon ri-shopping-bag-3-line pr-1"></i>
                 <span class="nav-label text-sm">Productos</span>
                 <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
             </div>
-
-            <!-- Apps -->
             <div class="nav-item">
                 <i class="nav-icon ri-smartphone-line pr-1"></i>
                 <span class="nav-label text-sm">Apps</span>
                 <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
             </div>
 
-            <!-- Páginas webs -->
             <div>
-                <div class="nav-item" onclick="toggleSubmenu(this)" id="nav-paginas">
-                    
+                <div class="nav-item active" onclick="toggleSubmenu(this)" id="nav-paginas">
                     <i class="nav-icon ri-computer-line pr-1"></i>
-                    <span class="nav-label text-sm"><a href="../partes/paginas_web.html">Páginas webs</a></span>
+                    <span class="nav-label text-sm">Páginas webs</span>
                     <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base transition-transform"
-                        id="arrow-paginas"></i>
-
+                        id="arrow-paginas" style="transform:rotate(90deg)"></i>
                     <div class="floating-sub">
                         <a href="#">Administrador</a>
                         <a href="#">Recursos humanos</a>
@@ -88,8 +64,7 @@
                         <a href="#">Logística</a>
                     </div>
                 </div>
-                <!-- submenu -->
-                <div class="submenu" id="sub-paginas">
+                <div class="submenu open" id="sub-paginas">
                     <div class="pl-9 pr-2 space-y-0.5 pb-1">
                         <a href="../partes/sbmadministrador.html"
                             class="block text-sm text-gray-500 hover:text-blue-600 px-2 py-1.5 rounded-lg hover:bg-blue-50">Administrador</a>
@@ -105,21 +80,16 @@
                 </div>
             </div>
 
-            <!-- Servidores -->
             <div class="nav-item">
                 <i class="nav-icon ri-server-line pr-1"></i>
                 <span class="nav-label text-sm">Servidores</span>
                 <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
             </div>
-
-            <!-- Tienda -->
             <div class="nav-item">
                 <i class="nav-icon ri-store-2-line pr-1"></i>
                 <span class="nav-label text-sm">Tienda</span>
                 <i class="nav-arrow ri-arrow-right-s-line ml-auto text-gray-400 text-base"></i>
             </div>
-
-            <!-- Centro de ayuda -->
             <div class="nav-item">
                 <i class="nav-icon ri-customer-service-2-line pr-1"></i>
                 <span class="nav-label text-sm">Centro de ayuda</span>
@@ -129,30 +99,22 @@
     </aside>
 
     <div class="flex-1 flex flex-col overflow-hidden">
-        
+
         <header class="bg-white border-b border-gray-100 px-6 py-3.5 flex items-center justify-between flex-shrink-0">
-            <!-- parte izquierda -->
             <div>
                 <h1 class="text-base font-bold text-gray-800">¡Te damos la bienvenida Miguel!</h1>
                 <p id="today-date" class="text-xs text-gray-400 mt-0.5"></p>
             </div>
-            <!-- parte derecha -->
             <div class="flex items-center gap-4">
-                <!-- lenguaje -->
                 <div class="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
                     <img src="../img/spain.png" alt="Español" class="w-5 h-5 object-contain">
                     <span class="font-medium">Español</span>
                     <i class="ri-arrow-down-s-line text-gray-400"></i>
                 </div>
-                <!-- mas -->
                 <button class="text-gray-400 hover:text-gray-700"><i class="ri-apps-2-line text-lg"></i></button>
-                <!-- notificaciones -->
-                <button class="relative text-gray-400 hover:text-gray-700">
-                    <i class="ri-notification-3-line text-lg"></i>
-                </button>
-                <!-- configuracion -->
+                <button class="relative text-gray-400 hover:text-gray-700"><i
+                        class="ri-notification-3-line text-lg"></i></button>
                 <button class="text-gray-400 hover:text-gray-700"><i class="ri-settings-3-line text-lg"></i></button>
-                <!-- perfil -->
                 <div class="flex items-center gap-2 cursor-pointer">
                     <img src="https://i.pravatar.cc/36?img=52" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
                     <div class="leading-tight">
@@ -164,76 +126,91 @@
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-6 space-y-5 bg-white">
-            <h2 class="text-base font-bold text-blue-800">Dashboard</h2>
-            <!-- ── carga de kpi ── -->
-            <div class="grid grid-cols-2 xl:grid-cols-4 gap-4" id="kpi-grid">
-                <!-- kpi -->
-                <div class="kpi-card">
-                    <div class="skeleton h-4 w-24 mb-3"></div>
-                    <div class="skeleton h-7 w-28 mb-2"></div>
-                    <div class="skeleton h-3 w-32"></div>
+        <main class="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
+            <h2 class="text-base font-bold text-blue-800">Páginas webs</h2>
+
+            <!-- Toolbar -->
+            <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <select id="per-page-select" onchange="changePerPage(this.value)"
+                        class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 text-gray-600 bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 cursor-pointer">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span class="text-sm text-gray-500">Datos por página</span>
                 </div>
-                <div class="kpi-card">
-                    <div class="skeleton h-4 w-24 mb-3"></div>
-                    <div class="skeleton h-7 w-28 mb-2"></div>
-                    <div class="skeleton h-3 w-32"></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="skeleton h-4 w-24 mb-3"></div>
-                    <div class="skeleton h-7 w-28 mb-2"></div>
-                    <div class="skeleton h-3 w-32"></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="skeleton h-4 w-24 mb-3"></div>
-                    <div class="skeleton h-7 w-28 mb-2"></div>
-                    <div class="skeleton h-3 w-32"></div>
+                <div class="flex items-center gap-2">
+                    <button onclick="openFilterModal()"
+                        class="flex items-center gap-1.5 text-sm text-gray-600 border border-gray-200 bg-white px-3 py-1.5 rounded-lg hover:bg-gray-50 transition">
+                        <i class="ri-filter-3-line"></i>
+                        Filtrar
+                    </button>
+                    <button onclick="openAddModal()"
+                        class="flex items-center gap-1.5 text-sm text-white px-4 py-1.5 rounded-lg font-semibold transition hover:opacity-90"
+                        style="background:var(--brand)">
+                        <i class="ri-add-line"></i>
+                        Agregar categoría
+                    </button>
                 </div>
             </div>
 
-            <!-- grafico de linea -->
-            <div class="chart-card">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-sm font-semibold text-blue-700">Historial de ventas</h3>
-                    <div class="flex items-center gap-4 text-xs text-gray-400">
-                        <span class="flex items-center gap-1"><span class="inline-block w-3 h-0.5 rounded"
-                                style="background:var(--brand)"></span>Total libre (GB)</span>
-                        <span class="flex items-center gap-1"><span
-                                class="inline-block w-3 h-0.5 rounded bg-sky-400"></span>% Libre (GB)</span>
-                    </div>
+            <!-- Table -->
+            <div class="tbl-wrap">
+                <!-- Header -->
+                <div class="tbl-row tbl-head">
+                    <div></div>
+                    <div>N°</div>
+                    <div>Categoría</div>
+                    <div>Descripción</div>
+                    <div>Fecha</div>
+                    <div>Categoría</div>
+                    <div>Acciones</div>
                 </div>
-                <div class="relative" style="height:180px">
-                    <canvas id="lineChart"></canvas>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <!-- grafico de dona -->
-                <div class="chart-card">
-                    <h3 class="text-sm font-semibold text-blue-700 mb-4">Historial de ventas</h3>
-                    <div class="flex items-center gap-6">
-                        <div class="relative flex-shrink-0" style="width:110px;height:110px">
-                            <canvas id="donutChart"></canvas>
+                <!-- Skeleton loading -->
+                <div id="table-body">
+                    <div class="tbl-row" id="skeleton-row-1">
+                        <div class="skeleton h-4 w-4 rounded"></div>
+                        <div class="skeleton h-4 w-6"></div>
+                        <div class="flex items-center gap-2">
+                            <div class="skeleton w-9 h-9 rounded-lg flex-shrink-0"></div>
+                            <div class="space-y-1.5">
+                                <div class="skeleton h-3 w-32"></div>
+                                <div class="skeleton h-3 w-24"></div>
+                            </div>
                         </div>
-                        <div id="period-stats" class="grid grid-cols-2 gap-x-6 gap-y-3 w-full">
-                            <!-- en el dashboard.js -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- grafica de barras horizontales -->
-                <div class="chart-card">
-                    <h3 class="text-sm font-semibold text-blue-700 mb-4">Historial de ventas</h3>
-                    <div id="referred-list" class="space-y-4">
-                        <!-- en el dashboard.js -->
+                        <div class="skeleton h-3 w-full"></div>
+                        <div class="skeleton h-3 w-28"></div>
+                        <div class="skeleton h-6 w-20 rounded-full"></div>
+                        <div class="skeleton h-4 w-20"></div>
                     </div>
                 </div>
             </div>
 
+            <!-- Footer -->
+            <div class="flex items-center justify-between text-sm text-gray-500">
+                <span id="pagination-info">Cargando...</span>
+                <div class="flex items-center gap-1" id="pagination-controls"></div>
+            </div>
         </main>
     </div>
 
-    <script src="../js/dashboard.js"></script>
+    <!-- VIEW DETAIL MODAL -->
+    <div id="view-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="closeViewModal()"></div>
+        <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-sm mx-4 p-6 space-y-4 z-10">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-gray-800">Detalle</h3>
+                <button onclick="closeViewModal()" class="text-gray-400 hover:text-gray-700"><i
+                        class="ri-close-line text-xl"></i></button>
+            </div>
+            <div id="view-content" class="space-y-3 text-sm text-gray-600"></div>
+        </div>
+    </div>
+
+    <script src="../js/paginas_web.js"></script>
+
 </body>
 
 </html>

@@ -1,7 +1,4 @@
-/* ══════════════════════════════════════
-   partes.css  –  LVL Consulting Dashboard
-   Estilos que complementan Tailwind CSS
-══════════════════════════════════════ */
+/* dashboard */
 
 :root {
     --brand: #092083;
@@ -14,7 +11,6 @@
     --shadow-card: 0 1px 6px rgba(0, 0, 0, .06);
 }
 
-/* ── Reset & base ─────────────────── */
 *,
 *::before,
 *::after {
@@ -29,7 +25,6 @@ body {
     color: #1e293b;
 }
 
-/* ── Sidebar ──────────────────────── */
 #sidebar {
     width: var(--sidebar-w);
     transition: width .25s cubic-bezier(.4, 0, .2, 1);
@@ -41,7 +36,6 @@ body {
     width: var(--sidebar-collapsed);
 }
 
-/* hide text when collapsed */
 #sidebar.collapsed .nav-label,
 #sidebar.collapsed .logo-text,
 #sidebar.collapsed .nav-arrow {
@@ -52,7 +46,7 @@ body {
     margin: 0 auto;
 }
 
-/* ── Nav items ───────────────────── */
+
 .nav-item {
     display: flex;
     align-items: center;
@@ -84,7 +78,7 @@ body {
     text-align: center;
 }
 
-/* ── Submenu (inline) ─────────────── */
+
 .submenu {
     overflow: hidden;
     max-height: 0;
@@ -95,7 +89,7 @@ body {
     max-height: 300px;
 }
 
-/* ── Floating submenu (collapsed) ─── */
+
 .floating-sub {
     display: none;
     position: absolute;
@@ -129,7 +123,7 @@ body {
     color: var(--brand);
 }
 
-/* ── KPI cards ───────────────────── */
+
 .kpi-card {
     background: #ffffff;
     border-radius: var(--radius-card);
@@ -162,7 +156,7 @@ body {
     display: inline-block;
 }
 
-/* ── Chart cards ─────────────────── */
+
 .chart-card {
     background: #ffffff;
     border-radius: var(--radius-card);
@@ -175,7 +169,6 @@ body {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .09);
 }
 
-/* ── Progress bars ────────────────── */
 .prog-bar {
     height: 6px;
     border-radius: 9999px;
@@ -189,12 +182,11 @@ body {
     transition: width .6s cubic-bezier(.4, 0, .2, 1);
 }
 
-/* ── Toggle button ───────────────── */
 #toggle-btn {
     transition: background .15s, color .15s;
 }
 
-/* ── Scrollbar ───────────────────── */
+
 ::-webkit-scrollbar {
     width: 5px;
 }
@@ -212,7 +204,7 @@ body {
     background: #94a3b8;
 }
 
-/* ── Skeleton loading ─────────────── */
+/* Skeleton loading */
 @keyframes skeleton-pulse {
 
     0%,
@@ -231,7 +223,7 @@ body {
     border-radius: .4rem;
 }
 
-/* ── Responsive tweaks ────────────── */
+
 @media (max-width: 768px) {
     #sidebar {
         width: var(--sidebar-collapsed);
@@ -242,4 +234,218 @@ body {
     #sidebar .nav-arrow {
         display: none !important;
     }
+}
+
+/* Paginas web */
+
+/* Badge colors */
+.badge-img {
+    background: #FFF3CD;
+    color: #856404;
+}
+
+.badge-doc {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.badge-vid {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+/* Table */
+.tbl-wrap {
+    background: #fff;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.tbl-row {
+    display: grid;
+    grid-template-columns: 40px 50px 260px 1fr 160px 140px 110px;
+    align-items: center;
+    gap: .75rem;
+    padding: .75rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tbl-row:last-child {
+    border-bottom: none;
+}
+
+.tbl-head {
+    background: #f8fafc;
+    font-size: .72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.tbl-row:not(.tbl-head):hover {
+    background: #fafcff;
+}
+
+/* Pagination btn */
+.pg-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: .4rem;
+    font-size: .78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.pg-btn:hover {
+    background: #e5e7eb;
+}
+
+.pg-btn.active {
+    background: var(--brand);
+    color: #fff;
+}
+
+.pg-btn:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+
+/* administrador */
+.form-label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: .35rem;
+    display: block;
+}
+
+.form-label .req {
+    color: #ef4444;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: .5rem;
+    padding: .55rem .85rem;
+    font-size: .83rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #374151;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #9ca3af;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
+}
+
+.form-textarea {
+    resize: none;
+}
+
+.select-wrap {
+    position: relative;
+}
+
+.select-wrap::after {
+    content: '\ea4e';
+    font-family: 'remixicon';
+    position: absolute;
+    right: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    pointer-events: none;
+    font-size: 1rem;
+}
+
+.drop-zone {
+    border: 1.5px dashed #d1d5db;
+    border-radius: .75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    padding: 2rem 1rem;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    background: #fafafa;
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+    border-color: var(--brand);
+    background: #f0f4ff;
+}
+
+.drop-zone input[type="file"] {
+    display: none;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .5rem .75rem;
+    background: #f8fafc;
+    border-radius: .5rem;
+    border: 1px solid #e5e7eb;
+    font-size: .78rem;
+}
+
+.file-item .file-icon {
+    color: #3b82f6;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.file-item .file-name {
+    flex: 1;
+    truncate: true;
+    color: #374151;
+    font-weight: 500;
+}
+
+.file-item .file-size {
+    color: #9ca3af;
+    font-size: .7rem;
+}
+
+.file-item .file-remove {
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color .15s;
+}
+
+.file-item .file-remove:hover {
+    color: #ef4444;
+}
+
+.form-card {
+    background: #fff;
+    border-radius: .75rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .05);
+    padding: 1.5rem;
 }
